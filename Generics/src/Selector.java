@@ -1,4 +1,4 @@
 
-public interface Selector {
-
+public interface Selector<T> {
+	boolean sel(T select);
 }

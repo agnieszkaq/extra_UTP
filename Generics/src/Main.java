@@ -1,9 +1,8 @@
 import java.util.*;
 
-
 public class Main {
 	public Main() {
-		List<Integer> src1 = Arrays.asList(1, 7, 9, 11, 12);
+		List<Integer> src1 = new ArrayList<>(Arrays.asList(1, 7, 9, 11, 12));
 		System.out.println(test1(src1));
 
 		List<String> src2 = Arrays.asList("a", "zzzz", "vvvvvvv");
@@ -11,20 +10,49 @@ public class Main {
 	}
 
 	public List<Integer> test1(List<Integer> src) {
-          Selector /*<-- definicja selektora; bez lambda-wyra¿eñ; nazwa zmiennej sel */
-          Mapper   /*<-- definicja mappera; bez lambda-wyra¿eñ; nazwa zmiennej map */
-          return   /*<-- zwrot wyniku
-            uzyskanego przez wywo³anie statycznej metody klasy ListCreator:
-           */  collectFrom(src).when(sel).mapEvery(map);
-        }
+		Selector<Integer> sel = new Selector<Integer>() {
 
-	public List<Integer> test2(List<String> src) {
-          Selector /*<-- definicja selektora; bez lambda-wyra¿eñ; nazwa zmiennej sel */
-          Mapper   /*<-- definicja mappera; bez lambda-wyra¿eñ; nazwa zmiennej map */
-          return   /*<-- zwrot wyniku
-            uzyskanego przez wywo³anie statycznej metody klasy ListCreator:
-           */  collectFrom(src).when(sel).mapEvery(map);
-        }
+			@Override
+			public boolean sel(Integer select) {
+				if (select < 10)
+					return true;
+				return false;
+			};
+		};
+
+		Mapper<Integer, Integer> map = new Mapper<Integer, Integer>() {
+
+			@Override
+			public Integer map(Integer item) {
+				return item + 10;
+			};
+		};
+
+		return ListCreator.collectFrom(src).when(sel).mapEvery(map);
+	}
+
+	public <T> List<Integer> test2(List<String> src) {
+		Selector<String> sel = new Selector<String>() {
+
+			@Override
+			public boolean sel(String select) {
+				if (select.length() > 3)
+					return true;
+				return false;
+			};
+		};
+
+		Mapper<String, Integer> map = new Mapper<String, Integer>() {
+
+			@Override
+			public Integer map(String item) {
+				
+				return item.length()+10;
+			}
+		};
+
+		return ListCreator.collectFrom(src).when(sel).mapEvery(map);
+	}
 
 	public static void main(String[] args) {
 		new Main();
